@@ -53,9 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
         objectStore.createIndex('sintomas', 'sintomas', {unique : false});
 
         console.log('BD creada y lista!!!');
-
-
-
     };
+    //Cuando el formulario se envia
+    form.addEventListener('submit', agregarDatos);
 
+    function agregarDatos(e){
+        e.preventDefault();
+        
+        const nuevaCita = {
+            mascota : nombreMascota.value,
+            cliente : nombreCliente.value,
+            telefono : telefono.value,
+            fecha : fecha.value,
+            hora : hora.value,
+            sintomas : sintomas.value
+        };
+        console.log(nuevaCita);
+    }
 });
