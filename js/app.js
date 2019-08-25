@@ -120,6 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p>
                 <p class="font-weight-bold">Síntomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
                 `;
+
+                //boton de borrar
+                const botonBorrar = document.createElement('button');
+                botonBorrar.classList.add('borrar','btn', 'btn-danger');
+                botonBorrar.innerHTML = '<span aria-hidden="true">x</span>Borrar';
+                botonBorrar.onclick = borrarCita;
+
+                citaHTML.appendChild(botonBorrar);
                 
                 //Append en el padre
                 citas.appendChild(citaHTML);
@@ -137,5 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+    }
+
+    function borrarCita(e){
+        console.log(e.target.parentElement.getAttribute('data-cita-id'));
     }
 });
