@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         //Asignar a la BD
         DB = crearDB.result;
         //console.log(DB);
+
+        mostrarCitas();
     };
 
     //Este método solo corre una vez y es ideal para crear el Schema.
@@ -83,9 +85,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         transaction.oncomplete = () => {
             console.log('Cita agregada');
+            mostrarCitas();
         }
         transaction.onerror = () => {
-            console.log('Hubo u error!');
+            console.log('Hubo un error!');
+        }
+    }
+
+    function mostrarCitas(){
+        //Limpiar citas anteriores
+        while(citas.firstChild){
+            citas.removeChild(citas.firstChild);
+        }
+
+        // Creamos un objectstore
+        let objectStore = DB.transaction('citas').objectStore('citas');
+
+        // Esto retorna una petición
+        objectStore.openCursor().onsuccess = function(e) {
+            //Cursor se va a ubicar en el registro indicado para acceder a los datos.
+            let cursor = e.target.result;
+
+            //console.log(cursor);
+            if(cursor){
+                let citaHTML = document.createElement('li');
+                citaHTML.setAttribute('data-cita-id', cursor.value.key);
+                citaHTML.classList.add('list-group-item');
+
+                citaHTML.innerHTML = `
+                <p class="font-weight-bold">Mascota: <span class="font-weight-normal">${cursor.value.mascota}</span></p>
+                <p class="font-weight-bold">Cliente: <span class="font-weight-normal">${cursor.value.cliente}</span></p>
+                <p class="font-weight-bold">Teléfono: <span class="font-weight-normal">${cursor.value.telefono}</span></p>
+                <p class="font-weight-bold">Fecha: <span class="font-weight-normal">${cursor.value.fecha}</span></p>
+                <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p>
+                <p class="font-weight-bold">Síntomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
+                `;
+                
+                //Append en el padre
+                citas.appendChild(citaHTML);
+                cursor.continue();
+
+            }
         }
     }
 });
