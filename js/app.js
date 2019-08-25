@@ -124,7 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 //Append en el padre
                 citas.appendChild(citaHTML);
                 cursor.continue();
-
+            } else {
+                if(!citas.firstChild){
+                    //Cuando no hay registro
+                    headingAdministra.textContent = 'Agregar citas para comenzar';
+                    let listado = document.createElement('p');
+                    listado.classList.add('text-center');
+                    listado.textContent = 'No hay registros';
+                    citas.appendChild(listado);
+                }else{
+                    headingAdministra.textContent = 'Administra tus citas';
+                }
             }
         }
     }
