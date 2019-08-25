@@ -22,11 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     //Si todo esta bien entonces muestra en consola y asignar la BD.
     crearDB.onsuccess = function() {
-        console.log('Todo listo!!!');
+        //console.log('Todo listo!!!');
 
         //Asignar a la BD
         DB = crearDB.result;
-        console.log(DB);
+        //console.log(DB);
     };
 
     //Este método solo corre una vez y es ideal para crear el Schema.
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //Definir el objecstore, toma 2 parámetros el nombre de la BD 
         //y segundo las opciones
         //KeyPath es el indice de la BD
-        let objectStore = db.createObjectStore('cites', {keyPath: 'key', autoIncrement: true});
+        let objectStore = db.createObjectStore('citas', {keyPath: 'key', autoIncrement: true});
 
         //Crear los indices y campos de la BD, createIndex: 3 parámetros:
         // nombre, keypath y opciones
@@ -69,5 +69,23 @@ document.addEventListener('DOMContentLoaded', () => {
             sintomas : sintomas.value
         };
         console.log(nuevaCita);
+
+        //en IndexedDB se utilizan las transacciones.
+        let transaction = DB.transaction(['citas'], 'readwrite');
+        let objectStore = transaction.objectStore('citas');
+        console.log(objectStore);
+
+        let peticion = objectStore.add(nuevaCita);
+        console.log(peticion);
+
+        peticion.onsuccess = () => {
+            form.reset();
+        }
+        transaction.oncomplete = () => {
+            console.log('Cita agregada');
+        }
+        transaction.onerror = () => {
+            console.log('Hubo u error!');
+        }
     }
 });
