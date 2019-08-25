@@ -148,6 +148,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function borrarCita(e){
-        console.log(e.target.parentElement.getAttribute('data-cita-id'));
+        let citaID = Number(e.target.parentElement.getAttribute('data-cita-id'));
+
+        //en IndexedDB se utilizan las transacciones.
+        let transaction = DB.transaction(['citas'], 'readwrite');
+        let objectStore = transaction.objectStore('citas');
+
+        let peticion = objectStore.delete(citaID);
+
+        transaction.oncomplete = () => {
+            e.target.parentElement.parentElement.removeChild( e.target.parentElement );
+            console.log(`Se eliminó la cita con el ID: ${citaID}`);
+            if(!citas.firstChild){
+                //Cuando no hay registro
+                headingAdministra.textContent = 'Agregar citas para comenzar';
+                let listado = document.createElement('p');
+                listado.classList.add('text-center');
+                listado.textContent = 'No hay registros';
+                citas.appendChild(listado);
+            }else{
+                headingAdministra.textContent = 'Administra tus citas';
+            }
+        }
     }
 });
